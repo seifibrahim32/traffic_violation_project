@@ -6,7 +6,7 @@ class TrafficLightsDetector:
         self.model = YOLO("models/yolov8n.pt")
 
     def detect(self, frame):
-        results = self.model(frame, conf=0.9, device="cpu", verbose=True)[0]
+        results = self.model(frame, conf=0.1, device="cpu", verbose=False)[0]
         traffic_lights = []
 
         for box in results.boxes:

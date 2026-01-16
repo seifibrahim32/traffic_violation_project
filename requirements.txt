@@ -1,0 +1,6 @@
+numpy~=2.2.6
+ultralytics~=8.3.249
+opencv-contrib-python~=4.12.0.88
+django~=5.2.10
+requests~=2.32.5
+djangorestframework~=3.16.1

@@ -48,8 +48,24 @@ def classify_traffic_light_color(frame, box):
 
 
 # ================= LINE CROSSING =================
-def crossed_line(prev, curr, p1, p2):
-    def side(p, a, b):
-        return np.sign((b[0] - a[0]) * (p[1] - a[1]) -
-                       (b[1] - a[1]) * (p[0] - a[0]))
-    return side(prev, p1, p2) != side(curr, p1, p2)
+
+def line_intersects_box(p1, p2, box):
+    """
+    p1, p2: stop line endpoints
+    box: (x, y, w, h)
+    """
+    x, y, w, h = box
+
+    # Bottom edge of vehicle
+    bx1 = x
+    by1 = y + h
+    bx2 = w
+    by2 = h
+
+    def ccw(A, B, C):
+        return (C[1]-A[1])*(B[0]-A[0]) > (B[1]-A[1])*(C[0]-A[0])
+
+    def intersect(A, B, C, D):
+        return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
+
+    return intersect(p1, p2, (bx1, by1), (bx2, by2))
