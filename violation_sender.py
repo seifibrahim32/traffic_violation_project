@@ -4,7 +4,7 @@ import cv2
 
 def send_violation(frame, box):
     x, y, w, h = box
-    if x > 0 and y > 0 and w > 0 and h > 0:
+    if x <= 0 or y <= 0 or w <= 30 or h <= 30:
         return
     crop = frame[y: h, x:w]
 

@@ -209,7 +209,10 @@ while cap.isOpened():
             )
             cv2.rectangle(frame, (x, y), (bw, bh), (0, 0, 255), 2)
             multi_trackers.remove(tracker)
-            send_violation(frame,(x ,y ,bw , bh))
+            try:
+                send_violation(frame,(x ,y ,bw , bh))
+            except:
+                continue
 
     shared_frame = cv2.bitwise_and(frame, frame, mask=mask).copy()
 
@@ -220,7 +223,7 @@ while cap.isOpened():
     # Add new trackers for detected vehicles
     for box in detections:
         x1_v, y1_v, x2_v, y2_v = box
-        tracker = cv2.legacy.TrackerMOSSE.create()
+        tracker = cv2.legacy.TrackerMedianFlow.create()
         tracker.init(frame, (x1_v, y1_v, x2_v, y2_v))
         multi_trackers.append(tracker)
         cv2.rectangle(frame, (x1_v, y1_v), (x2_v, y2_v), (255, 0, 0), 2)

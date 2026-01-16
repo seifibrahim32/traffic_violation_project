@@ -1,3 +1,5 @@
 venv
 .idea
 __pycache__
+
+traffic_backend/media
