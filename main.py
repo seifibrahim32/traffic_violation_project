@@ -8,6 +8,7 @@ import numpy as np
 from traffic_light_detector import TrafficLightsDetector
 from vehicle_detector import VehicleDetector
 from violation_logic import classify_traffic_light_color, line_intersects_box
+from violation_sender import send_violation
 
 # ================= CONFIG =================
 VIDEO_PATH = "videos/8.mp4"
@@ -140,7 +141,7 @@ while cap.isOpened():
     if frame_count % FRAME_SKIP != 0:
         continue
 
-    frame = cv2.resize(frame, (900, 600))
+    frame = cv2.resize(frame, (900, 600)).copy()
 
     # ---------- ENHANCE TRAFFIC LIGHT ROI ----------
     roi_frame = frame[y1:y2, x1:x2]
@@ -190,7 +191,7 @@ while cap.isOpened():
         cv2.rectangle(
             mask,
             (x, y),
-            (x + bw, y + bh),
+            (bw, bh),
             0,
             thickness=-1
         )
@@ -206,8 +207,9 @@ while cap.isOpened():
                 (0, 0, 255),
                 2
             )
-
-        cv2.rectangle(frame, (x, y), (x + bw, y + bh), (0, 255, 0), 2)
+            cv2.rectangle(frame, (x, y), (bw, bh), (0, 0, 255), 2)
+            multi_trackers.remove(tracker)
+            send_violation(frame,(x ,y ,bw , bh))
 
     shared_frame = cv2.bitwise_and(frame, frame, mask=mask).copy()
 
@@ -218,11 +220,8 @@ while cap.isOpened():
     # Add new trackers for detected vehicles
     for box in detections:
         x1_v, y1_v, x2_v, y2_v = box
-        bw, bh = x2_v - x1_v, y2_v - y1_v
-        if bw <= 8 or bh <= 9:
-            continue
         tracker = cv2.legacy.TrackerMOSSE.create()
-        tracker.init(frame, (x1_v, y1_v, bw, bh))
+        tracker.init(frame, (x1_v, y1_v, x2_v, y2_v))
         multi_trackers.append(tracker)
         cv2.rectangle(frame, (x1_v, y1_v), (x2_v, y2_v), (255, 0, 0), 2)
 

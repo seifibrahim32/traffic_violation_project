@@ -4,7 +4,9 @@ import cv2
 
 def send_violation(frame, box):
     x, y, w, h = box
-    crop = frame[y:y + h, x:x + w]
+    if x > 0 and y > 0 and w > 0 and h > 0:
+        return
+    crop = frame[y: h, x:w]
 
     _, img_encoded = cv2.imencode(".jpg", crop)
 

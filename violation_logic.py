@@ -55,17 +55,10 @@ def line_intersects_box(p1, p2, box):
     box: (x, y, w, h)
     """
     x, y, w, h = box
-
-    # Bottom edge of vehicle
-    bx1 = x
-    by1 = y + h
-    bx2 = w
-    by2 = h
-
     def ccw(A, B, C):
         return (C[1]-A[1])*(B[0]-A[0]) > (B[1]-A[1])*(C[0]-A[0])
 
     def intersect(A, B, C, D):
         return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
 
-    return intersect(p1, p2, (bx1, by1), (bx2, by2))
+    return intersect(p1, p2, (x, y), (w, h))

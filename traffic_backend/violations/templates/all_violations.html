@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Traffic Violations Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #020617;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        thead {
+            background: #111827;
+        }
+
+        th {
+            padding: 14px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: #9ca3af;
+            border-bottom: 1px solid #1f2933;
+        }
+
+        td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #1f2933;
+        }
+
+        tr:hover {
+            background: rgba(239, 68, 68, 0.1);
+            transition: 0.3s;
+        }
+
+        .violation-image {
+            width: 180px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .badge.red {
+            background: #dc2626;
+            color: white;
+        }
+
+        .badge.yellow {
+            background: #facc15;
+            color: #000;
+        }
+
+        .badge.green {
+            background: #22c55e;
+            color: white;
+        }
+
+        .camera {
+            font-weight: bold;
+            color: #38bdf8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        @media (max-width: 900px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            tr {
+                margin-bottom: 20px;
+                background: #020617;
+                border-radius: 12px;
+                padding: 10px;
+            }
+
+            td {
+                border: none;
+                text-align: right;
+                padding: 10px;
+            }
+
+            td::before {
+                content: attr(data-label);
+                float: left;
+                color: #9ca3af;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🚦 Traffic Light Violations</h1>
+</header>
+
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Vehicle Image</th>
+                <th>Light State</th>
+                <th>Camera</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for v in violations %}
+            <tr>
+                <td data-label="Time">
+                    {{ v.timestamp|date:"Y-m-d H:i:s" }}
+                </td>
+
+                <td data-label="Image">
+                    <img src="{{ v.image.url }}" class="violation-image">
+                </td>
+
+                <td data-label="Light">
+                    <span class="badge {{ v.light_state|lower }}">
+                        {{ v.light_state }}
+                    </span>
+                </td>
+
+                <td data-label="Camera">
+                    <span class="camera">
+                        CAM-{{ v.camera_id }}
+                    </span>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4" style="padding: 30px; color: #94a3b8;">
+                    No violations detected 🚘
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    Traffic Violation Detection System © 2026
+</footer>
+
+</body>
+</html>

@@ -6,7 +6,7 @@ class VehicleDetector:
         self.vehicle_classes = [2, 3, 5, 7]  # car, motorcycle, bus, truck
 
     def detect(self, frame):
-        results = self.model(frame, device="cpu",  verbose=True)[0]
+        results = self.model(frame, conf =0.8, device="cpu",  verbose=True)[0]
         vehicles = []
 
         for box in results.boxes:

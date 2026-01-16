@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import TrafficViolation
+from .models import TrafficViolation
 
 
 class TrafficViolationSerializer(serializers.ModelSerializer):
